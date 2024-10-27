@@ -18,11 +18,11 @@ const Header = () => {
     <header className="header">
       <div className="header__container">
         <h6 className="header__title">Realworld Blog</h6>
-        <Button type="text" size="large">
+        <Button type="text" size="large" className="header__button">
           Sign In
         </Button>
         <ConfigProvider theme={SugnUpButtonConfig}>
-          <Button size="large" variant="outlined">
+          <Button size="large" variant="outlined" className="header__button">
             Sign Up
           </Button>
         </ConfigProvider>
