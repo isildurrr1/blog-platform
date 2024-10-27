@@ -1,8 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
-interface BlogInitStateType {
-  list: []
-}
+import { BlogInitStateType } from '../types/type'
 
 const initialState: BlogInitStateType = {
   list: [],
