@@ -1,0 +1,11 @@
+.card__custom-checkbox
+  display: inline-block
+  box-sizing: border-box
+  width: 16px
+  height: 16px
+  background-image: url(./heart.svg)
+  background-size: cover // Устанавливает размер изображения
+  input:hover + & 
+    background-image: url(./heart_hover.svg)
+  input:checked + & 
+    background-image: url(./heart_active.svg)

@@ -11,9 +11,11 @@ const Card: React.FC<CardProps> = ({ data }) => {
       <div className="card__header">
         <div className="card__article-info">
           <h5 className="card__title">{data.title}</h5>
-          <span>
-            <img src="./images/heart.svg" alt="like" className="card__like" /> 12
-          </span>
+          <label className="card__like" htmlFor="like">
+            <input className="card__checkbox" type="checkbox" id="like" />
+            <span className="card__custom-checkbox" />
+            12
+          </label>
           <div className="card__tag-list">
             {data.tagList.map(
               (tag) =>
