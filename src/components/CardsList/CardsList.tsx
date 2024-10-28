@@ -60,7 +60,7 @@ const CardsList: React.FC = () => {
   return (
     <div className="cards-list">
       {data.map((card) => (
-        <Card data={card} key={uuidv4()} />
+        <Card data={card} type="card" key={uuidv4()} />
       ))}
     </div>
   )

@@ -23,4 +23,9 @@ export interface ArticleType {
 
 export interface CardProps {
   data: ArticleType
+  type: 'card' | 'article'
+}
+
+export interface ArticleProps {
+  data: ArticleType
 }
