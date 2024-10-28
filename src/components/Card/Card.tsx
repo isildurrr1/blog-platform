@@ -1,7 +1,8 @@
 import React from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { format, parseISO } from 'date-fns'
-import Markdown from 'markdown-to-jsx'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 import './card/card.sass'
 import { CardProps } from '../../types/type'
@@ -35,7 +36,11 @@ const Card: React.FC<CardProps> = ({ data, type }) => {
         <img src={data.author.image} alt="avatar" className="card__avatar" />
       </div>
       <p className={`card__description ${type === 'card' && 'card__description_short'}`}>{data.description}</p>
-      {type !== 'card' && <Markdown style={{ color: '#000000BF' }}>{data.body}</Markdown>}
+      {type !== 'card' && (
+        <div style={{ color: '#000000BF' }}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{data.body}</ReactMarkdown>
+        </div>
+      )}
     </div>
   )
 }
