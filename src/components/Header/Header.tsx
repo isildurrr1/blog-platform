@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './header/header.sass'
 import { Button, ConfigProvider } from 'antd'
 
@@ -17,7 +18,9 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header__container">
-        <h6 className="header__title">Realworld Blog</h6>
+        <Link to="/" className="header__link">
+          <h6 className="header__title">Realworld Blog</h6>
+        </Link>
         <Button type="text" size="large" className="header__button">
           Sign In
         </Button>

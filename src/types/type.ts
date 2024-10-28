@@ -1,5 +1,5 @@
 export interface BlogInitStateType {
-  list: []
+  list: ArticleType[]
 }
 
 export interface AuthorType {
@@ -24,4 +24,8 @@ export interface ArticleType {
 export interface CardProps {
   data: ArticleType
   type: 'card' | 'article'
+}
+
+export interface FetchArticlesResponseType {
+  articles: ArticleType[]
 }
