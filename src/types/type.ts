@@ -1,5 +1,3 @@
-import { ReactChildren } from 'react'
-
 export interface BlogInitStateType {
   list: ArticleType[]
 }
@@ -32,14 +30,22 @@ export interface FetchArticlesResponseType {
   articles: ArticleType[]
 }
 
-export interface AuthDataType {
-  title: string
-  btnText: string
-  pText: string
-  linkText: string
+export interface LoginFormType {
+  email: string
+  password: string
+}
+
+export interface RegisterFormType {
+  username: string
+  email: string
+  password: string
+  repeatPas: string
+  checkbox: boolean
 }
 
 export interface AuthProps {
-  data: AuthDataType
+  title: string
+  text: string
+  link: string
   children: React.ReactNode
 }

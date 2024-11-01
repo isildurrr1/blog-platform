@@ -20,6 +20,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'react/jsx-props-no-spreading': 'off',
     'react/function-component-definition': [
       2,
       {

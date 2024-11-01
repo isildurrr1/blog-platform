@@ -1,31 +1,15 @@
 import { AuthProps } from '../../types/type'
-import './auth/auth.sass'
 
-const Auth: React.FC<AuthProps> = ({ data, children }) => {
-  const { title, btnText, pText, linkText } = data
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    const values: { [key: string]: string } = {}
-    formData.forEach((value, key) => {
-      values[key] = value as string
-    })
-    console.log(values)
-  }
+const Auth: React.FC<AuthProps> = ({ title, text, link, children }) => {
   return (
     <div className="auth">
       <div className="auth__container">
         <h4 className="auth__title">{title}</h4>
-        <form action="" className="auth__form" onSubmit={(e) => handleSubmit(e)}>
-          {children}
-          <button type="submit" className="auth__submit">
-            {btnText}
-          </button>
-        </form>
+        {children}
         <p className="auth__text">
-          {pText}
+          {text}
           <button type="button" className="auth__link">
-            {linkText}
+            {link}
           </button>
         </p>
       </div>
