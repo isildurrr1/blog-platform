@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './header/header.sass'
 import { Button, ConfigProvider } from 'antd'
 
 const Header = () => {
+  const navigate = useNavigate()
   const SugnUpButtonConfig = {
     components: {
       Button: {
@@ -21,11 +22,11 @@ const Header = () => {
         <Link to="/" className="header__link">
           <h6 className="header__title">Realworld Blog</h6>
         </Link>
-        <Button type="text" size="large" className="header__button">
+        <Button type="text" size="large" className="header__button" onClick={() => navigate('./sign-in')}>
           Sign In
         </Button>
         <ConfigProvider theme={SugnUpButtonConfig}>
-          <Button size="large" variant="outlined" className="header__button">
+          <Button size="large" variant="outlined" className="header__button" onClick={() => navigate('./sign-up')}>
             Sign Up
           </Button>
         </ConfigProvider>

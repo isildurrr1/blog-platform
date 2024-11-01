@@ -1,3 +1,5 @@
+import { ReactChildren } from 'react'
+
 export interface BlogInitStateType {
   list: ArticleType[]
 }
@@ -28,4 +30,16 @@ export interface CardProps {
 
 export interface FetchArticlesResponseType {
   articles: ArticleType[]
+}
+
+export interface AuthDataType {
+  title: string
+  btnText: string
+  pText: string
+  linkText: string
+}
+
+export interface AuthProps {
+  data: AuthDataType
+  children: React.ReactNode
 }

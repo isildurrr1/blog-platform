@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { ArticleType } from '../../types/type'
 import './cards-list/cards-list.sass'
 import Card from '../Card/Card'
-import { useAppDispatch, useAppSelector } from '../hooks/hooks'
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
 import { fetchArticles } from '../../store/blogSlice'
 
 const CardsList: React.FC = () => {
