@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 import { BlogInitStateType, FetchArticlesResponseType } from '../types/type'
 
-export const fetchArticles = createAsyncThunk<FetchArticlesResponseType>('blog/fetchArticles', async () => {
-  const response = await fetch('https://blog-platform.kata.academy/api/articles')
+export const fetchArticles = createAsyncThunk<FetchArticlesResponseType, number>('blog/fetchArticles', async (page) => {
+  const response = await fetch(`https://blog-platform.kata.academy/api/articles?limit=5&offset=${(page - 1) * 5}`)
   const articles = await response.json()
   return articles
 })
