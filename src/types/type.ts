@@ -1,5 +1,9 @@
 export interface BlogInitStateType {
   list: ArticleType[]
+  loading: boolean
+  success: boolean
+  error: RegErrorType | null
+  user: null | FetchRegistrationResponseType
 }
 
 export interface AuthorType {
@@ -48,4 +52,19 @@ export interface AuthProps {
   text: string
   link: string
   children: React.ReactNode
+}
+
+export interface FetchRegistrationResponseType {
+  user: {
+    username: string
+    email: string
+    token: string
+  }
+}
+
+export interface RegErrorType {
+  errors?: {
+    username?: string
+    email?: string
+  }
 }

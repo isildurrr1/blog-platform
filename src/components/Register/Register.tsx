@@ -1,20 +1,45 @@
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 import Auth from '../Auth/Auth'
 import '../Auth/auth/auth.sass'
 import { RegisterFormType } from '../../types/type'
+import { clearSuccess, fetchRegistration } from '../../store/blogSlice'
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
 
 const Register = () => {
+  const { error, loading, success } = useAppSelector((store) => store.blog)
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
     formState: { errors },
     getValues,
+    setError,
   } = useForm<RegisterFormType>()
 
-  const onSubmit = (values: object) => {
-    console.log(values)
+  const onSubmit = (values: RegisterFormType) => {
+    dispatch(fetchRegistration(values))
   }
+
+  useEffect(() => {
+    if (error) {
+      if (error.errors) {
+        if (error.errors.username) {
+          setError('username', { type: 'server', message: error.errors.username })
+        }
+        if (error.errors.email) {
+          setError('email', { type: 'server', message: error.errors.email })
+        }
+      }
+    }
+    if (success) {
+      navigate('/sign-in')
+      dispatch(clearSuccess())
+    }
+  }, [success, error, setError])
 
   return (
     <Auth title="Create new account" text="Already have an account?" link="Sign In.">
@@ -60,6 +85,7 @@ const Register = () => {
         <label htmlFor="password" className="auth__label">
           Password
           <input
+            value="isildurrr"
             placeholder="Password"
             id="password"
             className={`auth__input ${errors.password ? 'auth__input_error' : ''}`}
@@ -81,6 +107,7 @@ const Register = () => {
         <label htmlFor="repeatPas" className="auth__label">
           Repeat Password
           <input
+            value="isildurrr"
             placeholder="Repeat Password"
             id="repeatPas"
             className={`auth__input ${errors.repeatPas ? 'auth__input_error' : ''}`}
@@ -108,8 +135,8 @@ const Register = () => {
         </label>
         {errors.checkbox && <span className="auth__error-message">{errors.checkbox.message}</span>}
 
-        <button type="submit" className="auth__submit">
-          Register
+        <button type="submit" className="auth__submit" disabled={loading}>
+          {loading ? 'Create...' : 'Create'}
         </button>
       </form>
     </Auth>
