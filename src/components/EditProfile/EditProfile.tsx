@@ -1,28 +1,34 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { useEffect } from 'react'
 
+// import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
+import { useAppSelector } from '../../hooks/hooks'
 import Auth from '../Auth/Auth'
-import '../Auth/auth/auth.sass'
-import { RegisterFormType } from '../../types/type'
-import { fetchRegistration } from '../../store/blogSlice'
-import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
+import { EditFormType } from '../../types/type'
 
-const Register = () => {
-  const { error, loading, loggedIn } = useAppSelector((store) => store.blog)
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
+const EditProfile = () => {
+  const { error, user, loading } = useAppSelector((store) => store.blog)
+  // const dispatch = useAppDispatch()
+  // const navigate = useNavigate()
   const {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
     setError,
-  } = useForm<RegisterFormType>()
+    setValue,
+  } = useForm<EditFormType>()
 
-  const onSubmit = (values: RegisterFormType) => {
-    dispatch(fetchRegistration(values))
+  const onSubmit = (values: EditFormType) => {
+    console.log(values)
   }
+
+  useEffect(() => {
+    if (user?.user.username) {
+      setValue('username', user?.user.username)
+      setValue('email', user?.user.email)
+    }
+  }, [user])
 
   useEffect(() => {
     if (error) {
@@ -35,17 +41,15 @@ const Register = () => {
         }
       }
     }
-    if (loggedIn) {
-      navigate('/articles')
-    }
-  }, [loggedIn, error, setError])
+  }, [error, setError])
 
   return (
-    <Auth title="Create new account" text="Already have an account?" link="Sign In.">
-      <form className="auth__form" onSubmit={handleSubmit(onSubmit)}>
+    <Auth title="Edit Profile">
+      <form action="" className="auth__form" onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="username" className="auth__label">
           Username
           <input
+            defaultValue={user?.user.username}
             placeholder="Username"
             id="username"
             className={`auth__input ${errors.username ? 'auth__input_error' : ''}`}
@@ -67,9 +71,10 @@ const Register = () => {
         <label htmlFor="email" className="auth__label">
           Email address
           <input
+            defaultValue={user?.user.email}
             placeholder="Email address"
-            className={`auth__input ${errors.email ? 'auth__input_error' : ''}`}
             id="email"
+            className={`auth__input ${errors.email ? 'auth__input_error' : ''}`}
             {...register('email', {
               required: 'Email is required',
               pattern: {
@@ -82,13 +87,12 @@ const Register = () => {
         </label>
 
         <label htmlFor="password" className="auth__label">
-          Password
+          New password
           <input
             placeholder="Password"
             id="password"
             className={`auth__input ${errors.password ? 'auth__input_error' : ''}`}
             {...register('password', {
-              required: 'Password is required',
               minLength: {
                 value: 6,
                 message: 'Password must be at least 6 characters long',
@@ -102,42 +106,27 @@ const Register = () => {
           {errors.password && <span className="auth__error-message">{errors.password.message}</span>}
         </label>
 
-        <label htmlFor="repeatPas" className="auth__label">
-          Repeat Password
+        <label htmlFor="avatar" className="auth__label">
+          Avatar image (url)
           <input
-            placeholder="Repeat Password"
-            id="repeatPas"
-            className={`auth__input ${errors.repeatPas ? 'auth__input_error' : ''}`}
-            {...register('repeatPas', {
-              required: 'Please repeat your password',
-              validate: (value) => {
-                const { password } = getValues()
-                return value === password || 'Passwords do not match'
+            placeholder="Avatar image"
+            id="avatar"
+            className={`auth__input ${errors.avatar ? 'auth__input_error' : ''}`}
+            {...register('avatar', {
+              pattern: {
+                value: /^(https?:\/\/[^\s]+)$/,
+                message: 'Please enter a valid URL',
               },
             })}
           />
-          {errors.repeatPas && <span className="auth__error-message">{errors.repeatPas.message}</span>}
+          {errors.avatar && <span className="auth__error-message">{errors.avatar.message}</span>}
         </label>
-
-        <label htmlFor="checkbox" className="auth__checkbox-label">
-          <input
-            className="auth__checkbox"
-            type="checkbox"
-            id="checkbox"
-            {...register('checkbox', {
-              required: 'You must agree to the processing of personal data',
-            })}
-          />
-          <span className="auth__custom-checkbox" /> I agree to the processing of my personal information
-        </label>
-        {errors.checkbox && <span className="auth__error-message">{errors.checkbox.message}</span>}
-
         <button type="submit" className="auth__submit" disabled={loading}>
-          {loading ? 'Create...' : 'Create'}
+          {loading ? 'Save...' : 'Save'}
         </button>
       </form>
     </Auth>
   )
 }
 
-export default Register
+export default EditProfile

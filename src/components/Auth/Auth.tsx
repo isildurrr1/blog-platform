@@ -6,12 +6,14 @@ const Auth: React.FC<AuthProps> = ({ title, text, link, children }) => {
       <div className="auth__container">
         <h4 className="auth__title">{title}</h4>
         {children}
-        <p className="auth__text">
-          {text}
-          <button type="button" className="auth__link">
-            {link}
-          </button>
-        </p>
+        {text && (
+          <p className="auth__text">
+            {text}
+            <button type="button" className="auth__link">
+              {link}
+            </button>
+          </p>
+        )}
       </div>
     </div>
   )

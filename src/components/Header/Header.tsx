@@ -23,10 +23,10 @@ const Header = () => {
                 Create article
               </Button>
             </ConfigProvider>
-            <div className="header__user">
+            <button type="button" className="header__user" onClick={() => navigate('/profile')}>
               <h5 className="header__name">{user?.user.username}</h5>
               <img src={user?.user.image || './images/avatar.png'} alt="avatar" className="header__avatar" />
-            </div>
+            </button>
             <ConfigProvider theme={LogOutButtonConfig}>
               <Button size="large" variant="outlined" className="header__button" onClick={() => console.log('lol')}>
                 Log Out
@@ -35,11 +35,11 @@ const Header = () => {
           </div>
         ) : (
           <>
-            <Button type="text" size="large" className="header__button" onClick={() => navigate('./sign-in')}>
+            <Button type="text" size="large" className="header__button" onClick={() => navigate('/sign-in')}>
               Sign In
             </Button>
             <ConfigProvider theme={SugnUpButtonConfig}>
-              <Button size="large" variant="outlined" className="header__button" onClick={() => navigate('./sign-up')}>
+              <Button size="large" variant="outlined" className="header__button" onClick={() => navigate('/sign-up')}>
                 Sign Up
               </Button>
             </ConfigProvider>

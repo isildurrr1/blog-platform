@@ -10,6 +10,7 @@ import Register from '../Register/Register'
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
 import PrivateRoute from '../PrivateRoute/PrivateRoute'
 import { fetchGetUserInfo, logOut } from '../../store/blogSlice'
+import EditProfile from '../EditProfile/EditProfile'
 
 const App = () => {
   const auth = useAppSelector((store) => store.blog.loggedIn)
@@ -31,9 +32,9 @@ const App = () => {
         <Route path="/" element={<PrivateRoute auth={auth} element={<CardsList />} />} />
         <Route path="/articles" element={<PrivateRoute auth={auth} element={<CardsList />} />} />
         <Route path="/articles/:slug" element={<PrivateRoute auth={auth} element={<Article />} />} />
+        <Route path="/profile" element={<PrivateRoute auth={auth} element={<EditProfile />} />} />
         <Route path="/sign-in" element={<Login />} />
         <Route path="/sign-up" element={<Register />} />
-        {/* <Route path="/profile" element={<CardsList />} /> */}
       </Routes>
     </div>
   )

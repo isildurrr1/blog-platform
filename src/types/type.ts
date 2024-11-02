@@ -49,10 +49,17 @@ export interface RegisterFormType {
   checkbox: boolean
 }
 
+export interface EditFormType {
+  username: string
+  email: string
+  password?: string
+  avatar?: string
+}
+
 export interface AuthProps {
   title: string
-  text: string
-  link: string
+  text?: string
+  link?: string
   children: React.ReactNode
 }
 
