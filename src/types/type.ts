@@ -1,7 +1,9 @@
+import { ReactElement } from 'react'
+
 export interface BlogInitStateType {
   list: ArticleType[]
   loading: boolean
-  success: boolean
+  loggedIn: boolean
   error: RegErrorType | null
   user: null | FetchRegistrationResponseType
 }
@@ -59,6 +61,8 @@ export interface FetchRegistrationResponseType {
     username: string
     email: string
     token: string
+    bio?: string
+    image?: string
   }
 }
 
@@ -66,5 +70,11 @@ export interface RegErrorType {
   errors?: {
     username?: string
     email?: string
+    general?: string
   }
+}
+
+export interface PrivateRouteProps {
+  element: ReactElement
+  auth: boolean
 }

@@ -43,11 +43,36 @@ export const fetchRegistration = createAsyncThunk<
   }
 })
 
+export const fetchGetUserInfo = createAsyncThunk<FetchRegistrationResponseType, string, { rejectValue: RegErrorType }>(
+  'blog/fetchGetUserInfo',
+  async (token, { rejectWithValue }) => {
+    try {
+      const response = await fetch('https://blog-platform.kata.academy/api/user', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user info')
+      }
+
+      const info = await response.json()
+      localStorage.setItem('jwt', info.user.token)
+      return info
+    } catch (error) {
+      return rejectWithValue({ errors: { general: 'Failed to fetch user info' } })
+    }
+  }
+)
+
 const initialState: BlogInitStateType = {
   list: [],
   loading: false,
   error: null,
-  success: false,
+  loggedIn: true,
   user: null,
 }
 
@@ -55,8 +80,10 @@ const blogSlice = createSlice({
   name: 'blog',
   initialState,
   reducers: {
-    clearSuccess(state) {
-      state.success = false
+    logOut(state) {
+      state.loggedIn = false
+      state.user = null
+      localStorage.removeItem('jwt')
     },
   },
   extraReducers: (builder) => {
@@ -78,15 +105,30 @@ const blogSlice = createSlice({
         state.error = null
         state.user = action.payload
         state.loading = false
-        state.success = true
+        state.loggedIn = true
       })
       .addCase(fetchRegistration.rejected, (state, action) => {
         state.error = action.payload || null
         state.loading = false
       })
+      .addCase(fetchGetUserInfo.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchGetUserInfo.fulfilled, (state, action) => {
+        state.error = null
+        state.user = action.payload
+        state.loading = false
+        state.loggedIn = true
+      })
+      .addCase(fetchGetUserInfo.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload || null
+        state.loggedIn = false
+      })
   },
 })
 
-export const { clearSuccess } = blogSlice.actions
+export const { logOut } = blogSlice.actions
 
 export default blogSlice.reducer

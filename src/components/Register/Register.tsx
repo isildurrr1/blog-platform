@@ -5,11 +5,11 @@ import { useForm } from 'react-hook-form'
 import Auth from '../Auth/Auth'
 import '../Auth/auth/auth.sass'
 import { RegisterFormType } from '../../types/type'
-import { clearSuccess, fetchRegistration } from '../../store/blogSlice'
+import { fetchRegistration } from '../../store/blogSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
 
 const Register = () => {
-  const { error, loading, success } = useAppSelector((store) => store.blog)
+  const { error, loading, loggedIn } = useAppSelector((store) => store.blog)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const {
@@ -35,11 +35,10 @@ const Register = () => {
         }
       }
     }
-    if (success) {
-      navigate('/sign-in')
-      dispatch(clearSuccess())
+    if (loggedIn) {
+      navigate('/articles')
     }
-  }, [success, error, setError])
+  }, [loggedIn, error, setError])
 
   return (
     <Auth title="Create new account" text="Already have an account?" link="Sign In.">
