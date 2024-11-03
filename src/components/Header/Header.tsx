@@ -2,13 +2,17 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Button, ConfigProvider } from 'antd'
 
 import './header/header.sass'
-import { useAppSelector } from '../../hooks/hooks'
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
 import { LogOutButtonConfig, SugnUpButtonConfig } from '../../utils/buttonConfig'
+import { logOut } from '../../store/blogSlice'
 
 const Header = () => {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const { loggedIn, user } = useAppSelector((store) => store.blog)
-  console.log(user)
+  const handleLogOut = () => {
+    dispatch(logOut())
+  }
 
   return (
     <header className="header">
@@ -28,7 +32,7 @@ const Header = () => {
               <img src={user?.user.image || './images/avatar.png'} alt="avatar" className="header__avatar" />
             </button>
             <ConfigProvider theme={LogOutButtonConfig}>
-              <Button size="large" variant="outlined" className="header__button" onClick={() => console.log('lol')}>
+              <Button size="large" variant="outlined" className="header__button" onClick={handleLogOut}>
                 Log Out
               </Button>
             </ConfigProvider>

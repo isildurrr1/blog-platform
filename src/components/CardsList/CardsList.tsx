@@ -38,7 +38,7 @@ const CardsList: React.FC = () => {
           align="center"
           current={currentPage}
           pageSize={5}
-          total={325}
+          total={335}
           onChange={handlePageChange}
           showSizeChanger={false}
         />

@@ -106,20 +106,20 @@ const EditProfile = () => {
           {errors.password && <span className="auth__error-message">{errors.password.message}</span>}
         </label>
 
-        <label htmlFor="avatar" className="auth__label">
+        <label htmlFor="image" className="auth__label">
           Avatar image (url)
           <input
             placeholder="Avatar image"
-            id="avatar"
-            className={`auth__input ${errors.avatar ? 'auth__input_error' : ''}`}
-            {...register('avatar', {
+            id="image"
+            className={`auth__input ${errors.image ? 'auth__input_error' : ''}`}
+            {...register('image', {
               pattern: {
                 value: /^(https?:\/\/[^\s]+)$/,
                 message: 'Please enter a valid URL',
               },
             })}
           />
-          {errors.avatar && <span className="auth__error-message">{errors.avatar.message}</span>}
+          {errors.image && <span className="auth__error-message">{errors.image.message}</span>}
         </label>
         <button type="submit" className="auth__submit" disabled={loading}>
           {loading ? 'Save...' : 'Save'}

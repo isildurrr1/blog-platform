@@ -1,69 +1,57 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
+import ApiService from '../utils/ApiService'
 import {
   BlogInitStateType,
-  FetchArticlesResponseType,
-  FetchRegistrationResponseType,
+  FetchArtResType,
+  FetchRegResType,
+  LoginFormType,
   RegErrorType,
-  RegisterFormType,
+  RegFormType,
 } from '../types/type'
 
-export const fetchArticles = createAsyncThunk<FetchArticlesResponseType, number>('blog/fetchArticles', async (page) => {
-  const response = await fetch(`https://blog-platform.kata.academy/api/articles?limit=5&offset=${(page - 1) * 5}`)
-  const articles = await response.json()
-  return articles
+export const fetchArticles = createAsyncThunk<FetchArtResType, number>('blog/fetchArticles', async (page) => {
+  return ApiService.getArticles(page)
 })
 
-export const fetchRegistration = createAsyncThunk<
-  FetchRegistrationResponseType,
-  RegisterFormType,
-  { rejectValue: RegErrorType }
->('blog/fetchRegistration', async (user, { rejectWithValue }) => {
-  const { username, email, password } = user
-
-  try {
-    const response = await fetch('https://blog-platform.kata.academy/api/users', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ user: { username, email, password } }),
-    })
-
-    if (!response.ok) {
-      const errorData: RegErrorType = await response.json()
-      return rejectWithValue(errorData)
+export const fetchRegistration = createAsyncThunk<FetchRegResType, RegFormType, { rejectValue: RegErrorType }>(
+  'blog/fetchRegistration',
+  async (user, { rejectWithValue }) => {
+    try {
+      return await ApiService.registration(user)
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(JSON.parse(error.message))
+      }
+      return rejectWithValue({ errors: { general: 'Unknown error occurred' } })
     }
-
-    const newUser: FetchRegistrationResponseType = await response.json()
-    localStorage.setItem('jwt', newUser.user.token)
-    return newUser
-  } catch (error) {
-    return rejectWithValue({ errors: { username: 'Network error' } })
   }
-})
+)
 
-export const fetchGetUserInfo = createAsyncThunk<FetchRegistrationResponseType, string, { rejectValue: RegErrorType }>(
+export const fetchGetUserInfo = createAsyncThunk<FetchRegResType, string, { rejectValue: RegErrorType }>(
   'blog/fetchGetUserInfo',
   async (token, { rejectWithValue }) => {
     try {
-      const response = await fetch('https://blog-platform.kata.academy/api/user', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch user info')
-      }
-
-      const info = await response.json()
-      localStorage.setItem('jwt', info.user.token)
-      return info
+      return await ApiService.getUserInfo(token)
     } catch (error) {
-      return rejectWithValue({ errors: { general: 'Failed to fetch user info' } })
+      if (error instanceof Error) {
+        return rejectWithValue(JSON.parse(error.message))
+      }
+      return rejectWithValue({ errors: { general: 'Unknown error occurred' } })
+    }
+  }
+)
+
+export const fetchLogin = createAsyncThunk<FetchRegResType, LoginFormType, { rejectValue: RegErrorType }>(
+  'blog/fetchLogin',
+  async (user, { rejectWithValue }) => {
+    try {
+      return await ApiService.login(user)
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(JSON.parse(error.message))
+      }
+      return rejectWithValue({ errors: { general: 'Unknown error occurred' } })
     }
   }
 )
@@ -125,6 +113,20 @@ const blogSlice = createSlice({
         state.loading = false
         state.error = action.payload || null
         state.loggedIn = false
+      })
+      .addCase(fetchLogin.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchLogin.fulfilled, (state, action) => {
+        state.error = null
+        state.user = action.payload
+        state.loading = false
+        state.loggedIn = true
+      })
+      .addCase(fetchLogin.rejected, (state, action) => {
+        state.error = action.payload || null
+        state.loading = false
       })
   },
 })

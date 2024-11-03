@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 
 import Auth from '../Auth/Auth'
 import '../Auth/auth/auth.sass'
-import { RegisterFormType } from '../../types/type'
+import { RegFormType } from '../../types/type'
 import { fetchRegistration } from '../../store/blogSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
 
@@ -18,9 +18,9 @@ const Register = () => {
     formState: { errors },
     getValues,
     setError,
-  } = useForm<RegisterFormType>()
+  } = useForm<RegFormType>()
 
-  const onSubmit = (values: RegisterFormType) => {
+  const onSubmit = (values: RegFormType) => {
     dispatch(fetchRegistration(values))
   }
 

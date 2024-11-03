@@ -5,7 +5,7 @@ export interface BlogInitStateType {
   loading: boolean
   loggedIn: boolean
   error: RegErrorType | null
-  user: null | FetchRegistrationResponseType
+  user: null | FetchRegResType
 }
 
 export interface AuthorType {
@@ -32,7 +32,7 @@ export interface CardProps {
   type: 'card' | 'article'
 }
 
-export interface FetchArticlesResponseType {
+export interface FetchArtResType {
   articles: ArticleType[]
 }
 
@@ -41,7 +41,7 @@ export interface LoginFormType {
   password: string
 }
 
-export interface RegisterFormType {
+export interface RegFormType {
   username: string
   email: string
   password: string
@@ -53,7 +53,7 @@ export interface EditFormType {
   username: string
   email: string
   password?: string
-  avatar?: string
+  image?: string
 }
 
 export interface AuthProps {
@@ -63,7 +63,7 @@ export interface AuthProps {
   children: React.ReactNode
 }
 
-export interface FetchRegistrationResponseType {
+export interface FetchRegResType {
   user: {
     username: string
     email: string
@@ -78,6 +78,7 @@ export interface RegErrorType {
     username?: string
     email?: string
     general?: string
+    "email or password"?: string
   }
 }
 

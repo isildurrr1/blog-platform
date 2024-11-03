@@ -1,19 +1,37 @@
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
 import '../Auth/auth/auth.sass'
 import { LoginFormType } from '../../types/type'
 import Auth from '../Auth/Auth'
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
+import { fetchLogin } from '../../store/blogSlice'
 
 const Login = () => {
+  const { error, loggedIn, loading } = useAppSelector((store) => store.blog)
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginFormType>()
 
-  const onSubmit = (values: object) => {
-    console.log(values)
+  const onSubmit = (values: LoginFormType) => {
+    dispatch(fetchLogin(values))
   }
+
+  useEffect(() => {
+    if (error?.errors?.['email or password']) {
+      setError('email', { type: 'server', message: `email or password ${error.errors['email or password']}` })
+      setError('password', { type: 'server', message: `email or password ${error.errors['email or password']}` })
+    }
+    if (loggedIn) {
+      navigate('/articles')
+    }
+  }, [loggedIn, error])
 
   return (
     <Auth title="Sign In" text="Don’t have an account?" link="Sign Up.">
@@ -48,8 +66,8 @@ const Login = () => {
           {errors.password && <span className="auth__error-message">{errors.password.message}</span>}
         </label>
 
-        <button type="submit" className="auth__submit">
-          Login
+        <button type="submit" className="auth__submit" disabled={loading}>
+          {loading ? 'Login...' : 'Login'}
         </button>
       </form>
     </Auth>
