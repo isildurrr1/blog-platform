@@ -11,6 +11,7 @@ import { fetchArticles } from '../../store/blogSlice'
 const CardsList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const articles = useAppSelector((state) => state.blog.list)
+  const articlesCount = useAppSelector((state) => state.blog.articlesCount)
   const dispatch = useAppDispatch()
   useEffect(() => {
     dispatch(fetchArticles(currentPage))
@@ -38,7 +39,7 @@ const CardsList: React.FC = () => {
           align="center"
           current={currentPage}
           pageSize={5}
-          total={335}
+          total={articlesCount}
           onChange={handlePageChange}
           showSizeChanger={false}
         />

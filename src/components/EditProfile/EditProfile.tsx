@@ -1,16 +1,17 @@
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-// import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
-import { useAppSelector } from '../../hooks/hooks'
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
 import Auth from '../Auth/Auth'
 import { EditFormType } from '../../types/type'
+import { fetchEditProfile } from '../../store/blogSlice'
 
 const EditProfile = () => {
+  const [submit, setSubmit] = useState(false)
   const { error, user, loading } = useAppSelector((store) => store.blog)
-  // const dispatch = useAppDispatch()
-  // const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -20,7 +21,8 @@ const EditProfile = () => {
   } = useForm<EditFormType>()
 
   const onSubmit = (values: EditFormType) => {
-    console.log(values)
+    dispatch(fetchEditProfile(values))
+    setSubmit(true)
   }
 
   useEffect(() => {
@@ -40,8 +42,10 @@ const EditProfile = () => {
           setError('email', { type: 'server', message: error.errors.email })
         }
       }
+    } else if (!error && submit) {
+      navigate('/articles')
     }
-  }, [error, setError])
+  }, [user, error, setError])
 
   return (
     <Auth title="Edit Profile">

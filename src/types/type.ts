@@ -2,6 +2,7 @@ import { ReactElement } from 'react'
 
 export interface BlogInitStateType {
   list: ArticleType[]
+  articlesCount: number
   loading: boolean
   loggedIn: boolean
   error: RegErrorType | null
@@ -34,6 +35,7 @@ export interface CardProps {
 
 export interface FetchArtResType {
   articles: ArticleType[]
+  articlesCount: number
 }
 
 export interface LoginFormType {
@@ -78,7 +80,7 @@ export interface RegErrorType {
     username?: string
     email?: string
     general?: string
-    "email or password"?: string
+    'email or password'?: string
   }
 }
 
