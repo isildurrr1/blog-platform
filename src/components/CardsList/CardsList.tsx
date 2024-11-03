@@ -7,6 +7,7 @@ import './cards-list/cards-list.sass'
 import Card from '../Card/Card'
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
 import { fetchArticles } from '../../store/blogSlice'
+import { PaginationConfig } from '../../utils/AntdConfig'
 
 const CardsList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1)
@@ -24,17 +25,7 @@ const CardsList: React.FC = () => {
       {articles.map((card: ArticleType) => (
         <Card data={card} type="card" key={uuidv4()} />
       ))}
-      <ConfigProvider
-        theme={{
-          components: {
-            Pagination: {
-              itemActiveBg: '#1890FF',
-              colorPrimary: 'white',
-              colorPrimaryHover: 'white',
-            },
-          },
-        }}
-      >
+      <ConfigProvider theme={PaginationConfig}>
         <Pagination
           align="center"
           current={currentPage}

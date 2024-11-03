@@ -22,3 +22,13 @@ export const LogOutButtonConfig = {
     },
   },
 }
+
+export const PaginationConfig = {
+  components: {
+    Pagination: {
+      itemActiveBg: '#1890FF',
+      colorPrimary: 'white',
+      colorPrimaryHover: 'white',
+    },
+  },
+}

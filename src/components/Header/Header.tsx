@@ -3,7 +3,7 @@ import { Button, ConfigProvider } from 'antd'
 
 import './header/header.sass'
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
-import { LogOutButtonConfig, SugnUpButtonConfig } from '../../utils/buttonConfig'
+import { LogOutButtonConfig, SugnUpButtonConfig } from '../../utils/AntdConfig'
 import { logOut } from '../../store/blogSlice'
 
 const Header = () => {
@@ -12,6 +12,7 @@ const Header = () => {
   const { loggedIn, user } = useAppSelector((store) => store.blog)
   const handleLogOut = () => {
     dispatch(logOut())
+    navigate('/sign-in')
   }
 
   return (
@@ -23,7 +24,7 @@ const Header = () => {
         {loggedIn ? (
           <div className="header__user-info">
             <ConfigProvider theme={SugnUpButtonConfig}>
-              <Button variant="outlined" className="header__button">
+              <Button variant="outlined" className="header__button" onClick={() => navigate('/new-article')}>
                 Create article
               </Button>
             </ConfigProvider>
