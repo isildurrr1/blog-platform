@@ -2,11 +2,17 @@ import { useState } from 'react'
 import { Button } from 'antd'
 import { v4 as uuidv4 } from 'uuid'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
 import './new-article/new-article.sass'
 import { ArticleFormType } from '../../types/type'
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
+import { fetchPostArticle } from '../../store/blogSlice'
 
 const NewArticle: React.FC = () => {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const loading = useAppSelector((store) => store.blog.loading)
   const [newTag, setNewTag] = useState<string>('')
   const [tags, setTags] = useState<string[]>([])
 
@@ -20,15 +26,19 @@ const NewArticle: React.FC = () => {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     tags.forEach((tag, index) => {
-      setValue(`tags.${index}`, tag)
+      setValue(`tagList.${index}`, tag)
     })
     if (newTag.trim()) {
       if (!tags.includes(newTag)) {
-        setValue(`tags.${tags.length}`, newTag)
+        setValue(`tagList.${tags.length}`, newTag)
       }
     }
     handleSubmit((values) => {
-      console.log(values)
+      dispatch(fetchPostArticle(values)).then((res) => {
+        if (res.payload) {
+          navigate('/articles')
+        }
+      })
     })()
   }
 
@@ -80,9 +90,9 @@ const NewArticle: React.FC = () => {
               id="text"
               className="new-article__textarea"
               placeholder="Text"
-              {...register('text', { required: 'Text description is required' })}
+              {...register('body', { required: 'Text description is required' })}
             />
-            {errors.text && <span className="auth__error-message">{errors.text.message}</span>}
+            {errors.body && <span className="auth__error-message">{errors.body.message}</span>}
           </label>
 
           <div className="new-article__label">
@@ -133,8 +143,8 @@ const NewArticle: React.FC = () => {
               </Button>
             </div>
           </div>
-          <button type="submit" className="new-article__submit">
-            Send
+          <button type="submit" className="new-article__submit" disabled={loading}>
+            {loading ? 'Send...' : 'Send'}
           </button>
         </form>
       </div>

@@ -1,4 +1,13 @@
-import { EditFormType, FetchArtResType, FetchRegResType, LoginFormType, RegErrorType, RegFormType } from '../types/type'
+import {
+  ArticleFormType,
+  EditFormType,
+  FetchArtResType,
+  FetchPostArtResType,
+  FetchRegResType,
+  LoginFormType,
+  RegErrorType,
+  RegFormType,
+} from '../types/type'
 
 class ApiService {
   static baseUrl = 'https://blog-platform.kata.academy/api'
@@ -100,6 +109,26 @@ class ApiService {
     const updatedUser: FetchRegResType = await response.json()
     localStorage.setItem('jwt', updatedUser.user.token)
     return updatedUser
+  }
+
+  static async newArticle(article: ArticleFormType): Promise<FetchPostArtResType> {
+    const token = localStorage.getItem('jwt')
+    const response = await fetch(`${this.baseUrl}/articles`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ article }),
+    })
+
+    if (!response.ok) {
+      const errorData: RegErrorType = await response.json()
+      throw new Error(JSON.stringify(errorData))
+    }
+
+    const newArticle: FetchPostArtResType = await response.json()
+    return newArticle
   }
 }
 

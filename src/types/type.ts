@@ -92,6 +92,10 @@ export interface PrivateRouteProps {
 export interface ArticleFormType {
   title: string
   description: string
-  text: string
-  tags: string[]
+  body: string
+  tagList: string[]
+}
+
+export interface FetchPostArtResType {
+  article: ArticleType
 }

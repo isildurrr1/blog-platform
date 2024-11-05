@@ -1,8 +1,8 @@
 import { ActionReducerMapBuilder, AsyncThunk } from '@reduxjs/toolkit'
 
-import { BlogInitStateType, RegErrorType, FetchRegResType, FetchArtResType } from '../types/type'
+import { BlogInitStateType, RegErrorType, FetchRegResType, FetchArtResType, FetchPostArtResType } from '../types/type'
 
-const handleAsyncCase = <T, R extends FetchArtResType | FetchRegResType>(
+const handleAsyncCase = <T, R extends FetchArtResType | FetchRegResType | FetchPostArtResType>(
   builder: ActionReducerMapBuilder<BlogInitStateType>,
   actionType: AsyncThunk<R, T, { rejectValue: RegErrorType }>
 ) => {

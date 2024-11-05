@@ -2,9 +2,11 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 import ApiService from '../utils/ApiService'
 import {
+  ArticleFormType,
   BlogInitStateType,
   EditFormType,
   FetchArtResType,
+  FetchPostArtResType,
   FetchRegResType,
   LoginFormType,
   RegErrorType,
@@ -82,6 +84,20 @@ export const fetchEditProfile = createAsyncThunk<FetchRegResType, EditFormType, 
   }
 )
 
+export const fetchPostArticle = createAsyncThunk<FetchPostArtResType, ArticleFormType, { rejectValue: RegErrorType }>(
+  'blog/fetchPostArticle',
+  async (article, { rejectWithValue }) => {
+    try {
+      return await ApiService.newArticle(article)
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(JSON.parse(error.message))
+      }
+      return rejectWithValue({ errors: { general: 'Unknown error occurred' } })
+    }
+  }
+)
+
 const initialState: BlogInitStateType = {
   list: [],
   articlesCount: 0,
@@ -102,6 +118,7 @@ const blogSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    handleAsyncCase<ArticleFormType, FetchPostArtResType>(builder, fetchPostArticle)
     handleAsyncCase<number, FetchArtResType>(builder, fetchArticles)
     handleAsyncCase<RegFormType, FetchRegResType>(builder, fetchRegistration)
     handleAsyncCase<string, FetchRegResType>(builder, fetchGetUserInfo)
