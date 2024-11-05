@@ -89,3 +89,9 @@ export interface PrivateRouteProps {
   auth: boolean
 }
 
+export interface ArticleFormType {
+  title: string
+  description: string
+  text: string
+  tags: string[]
+}
