@@ -88,3 +88,4 @@ export interface PrivateRouteProps {
   element: ReactElement
   auth: boolean
 }
+
