@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { format, parseISO } from 'date-fns'
 import ReactMarkdown from 'react-markdown'
@@ -14,6 +14,9 @@ import ApiService from '../../utils/ApiService'
 
 const Card: React.FC<CardProps> = ({ data, type }) => {
   const navigate = useNavigate()
+  const [like, setLike] = useState<boolean>(data.favorited)
+  const [count, setCount] = useState<number>(data.favoritesCount)
+  const { loggedIn } = useAppSelector((store) => store.blog)
   const username = useAppSelector((store) => store.blog.user?.user.username)
   const handleShowFullArticle = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement
@@ -34,6 +37,19 @@ const Card: React.FC<CardProps> = ({ data, type }) => {
     })
   }
 
+  const likeCard = (value: boolean) => {
+    if (loggedIn) {
+      setLike(value)
+      if (value) {
+        ApiService.likeCard(data.slug)
+        setCount(count + 1)
+      } else {
+        ApiService.deleteLikeCard(data.slug)
+        setCount(count - 1)
+      }
+    }
+  }
+
   return (
     <div
       className="card"
@@ -49,9 +65,15 @@ const Card: React.FC<CardProps> = ({ data, type }) => {
           <div className="card__article-like-container">
             <h5 className="card__title">{data.title}</h5>
             <label className="card__like" htmlFor={data.slug}>
-              <input className="card__checkbox" type="checkbox" id={data.slug} />
+              <input
+                className="card__checkbox"
+                type="checkbox"
+                id={data.slug}
+                checked={like}
+                onChange={(e) => likeCard(e.target.checked)}
+              />
               <span className="card__custom-checkbox" />
-              {data.favoritesCount}
+              {count}
             </label>
           </div>
           <div className="card__tag-list">
@@ -99,7 +121,7 @@ const Card: React.FC<CardProps> = ({ data, type }) => {
         ) : null}
       </div>
       {type !== 'card' && (
-        <div style={{ color: '#000000BF' }}>
+        <div className="card__body">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{data.body}</ReactMarkdown>
         </div>
       )}

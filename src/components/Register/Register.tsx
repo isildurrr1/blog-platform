@@ -84,6 +84,7 @@ const Register = () => {
         <label htmlFor="password" className="auth__label">
           Password
           <input
+            type="password"
             placeholder="Password"
             id="password"
             className={`auth__input ${errors.password ? 'auth__input_error' : ''}`}
@@ -105,6 +106,7 @@ const Register = () => {
         <label htmlFor="repeatPas" className="auth__label">
           Repeat Password
           <input
+            type="password"
             placeholder="Repeat Password"
             id="repeatPas"
             className={`auth__input ${errors.repeatPas ? 'auth__input_error' : ''}`}

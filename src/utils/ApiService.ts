@@ -132,7 +132,14 @@ class ApiService {
   }
 
   static async getArticle(slug: string | undefined): Promise<FetchPostArtResType> {
-    const response = await fetch(`${this.baseUrl}/articles/${slug}`)
+    const token = localStorage.getItem('jwt')
+    const response = await fetch(`${this.baseUrl}/articles/${slug}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
     const article: FetchPostArtResType = await response.json()
     return article
   }
@@ -169,6 +176,36 @@ class ApiService {
 
     const newArticle: FetchPostArtResType = await response.json()
     return newArticle
+  }
+
+  static async likeCard(slug: string): Promise<boolean> {
+    const token = localStorage.getItem('jwt')
+    const response = await fetch(`${this.baseUrl}/articles/${slug}/favorite`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    if (response.ok) {
+      return true
+    }
+    return false
+  }
+
+  static async deleteLikeCard(slug: string): Promise<boolean> {
+    const token = localStorage.getItem('jwt')
+    const response = await fetch(`${this.baseUrl}/articles/${slug}/favorite`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    if (response.ok) {
+      return true
+    }
+    return false
   }
 }
 
