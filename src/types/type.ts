@@ -99,3 +99,7 @@ export interface ArticleFormType {
 export interface FetchPostArtResType {
   article: ArticleType
 }
+
+export interface EditArticleProps {
+  edit?: boolean
+}

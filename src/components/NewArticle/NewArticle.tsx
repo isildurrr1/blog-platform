@@ -1,17 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from 'antd'
 import { v4 as uuidv4 } from 'uuid'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import './new-article/new-article.sass'
-import { ArticleFormType, FetchPostArtResType } from '../../types/type'
+import { ArticleFormType, EditArticleProps, FetchPostArtResType } from '../../types/type'
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
-import { fetchPostArticle } from '../../store/blogSlice'
+import { fetchEditArticle, fetchPostArticle } from '../../store/blogSlice'
+import ApiService from '../../utils/ApiService'
 
-const NewArticle: React.FC = () => {
+const NewArticle: React.FC<EditArticleProps> = ({ edit = false }) => {
+  const { slug } = useParams()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const username = useAppSelector((store) => store.blog.user?.user.username)
   const loading = useAppSelector((store) => store.blog.loading)
   const [newTag, setNewTag] = useState<string>('')
   const [tags, setTags] = useState<string[]>([])
@@ -19,9 +22,29 @@ const NewArticle: React.FC = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
     setValue,
   } = useForm<ArticleFormType>()
+
+  useEffect(() => {
+    if (edit) {
+      ApiService.getArticle(slug).then((res) => {
+        if (res.article.author.username === username) {
+          setValue('title', res.article.title)
+          setValue('description', res.article.description)
+          setValue('body', res.article.body)
+          setTags(res.article.tagList)
+        } else {
+          navigate('/articles')
+        }
+      })
+    } else {
+      setNewTag('')
+      setTags([])
+      reset()
+    }
+  }, [edit])
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,11 +57,19 @@ const NewArticle: React.FC = () => {
       }
     }
     handleSubmit((values) => {
-      dispatch(fetchPostArticle(values)).then((res) => {
-        if (res.payload) {
-          navigate(`/articles/${(res.payload as FetchPostArtResType).article.slug}`)
-        }
-      })
+      if (edit) {
+        dispatch(fetchEditArticle({ slug, article: values })).then((res) => {
+          if (res.payload) {
+            navigate(`/articles/${(res.payload as FetchPostArtResType).article.slug}`)
+          }
+        })
+      } else {
+        dispatch(fetchPostArticle(values)).then((res) => {
+          if (res.payload) {
+            navigate(`/articles/${(res.payload as FetchPostArtResType).article.slug}`)
+          }
+        })
+      }
     })()
   }
 
@@ -58,7 +89,7 @@ const NewArticle: React.FC = () => {
   return (
     <div className="new-article">
       <div className="new-article__container">
-        <h4 className="new-article__title">Create new article</h4>
+        <h4 className="new-article__title">{edit ? 'Edit article' : 'Create new article'}</h4>
         <form action="" className="new-article__form" onSubmit={handleFormSubmit}>
           <label htmlFor="title" className="new-article__label">
             Title

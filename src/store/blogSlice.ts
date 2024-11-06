@@ -98,6 +98,21 @@ export const fetchPostArticle = createAsyncThunk<FetchPostArtResType, ArticleFor
   }
 )
 
+export const fetchEditArticle = createAsyncThunk<
+  FetchPostArtResType,
+  { slug: string | undefined; article: ArticleFormType },
+  { rejectValue: RegErrorType }
+>('blog/fetchEditArticle', async ({ slug, article }, { rejectWithValue }) => {
+  try {
+    return await ApiService.editArticle(slug, article)
+  } catch (error) {
+    if (error instanceof Error) {
+      return rejectWithValue(JSON.parse(error.message))
+    }
+    return rejectWithValue({ errors: { general: 'Unknown error occurred' } })
+  }
+})
+
 const initialState: BlogInitStateType = {
   list: [],
   articlesCount: 0,
@@ -118,6 +133,10 @@ const blogSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    handleAsyncCase<{ slug: string | undefined; article: ArticleFormType }, FetchPostArtResType>(
+      builder,
+      fetchEditArticle
+    )
     handleAsyncCase<ArticleFormType, FetchPostArtResType>(builder, fetchPostArticle)
     handleAsyncCase<number, FetchArtResType>(builder, fetchArticles)
     handleAsyncCase<RegFormType, FetchRegResType>(builder, fetchRegistration)

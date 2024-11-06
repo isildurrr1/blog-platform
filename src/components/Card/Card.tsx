@@ -46,12 +46,14 @@ const Card: React.FC<CardProps> = ({ data, type }) => {
     >
       <div className="card__header">
         <div className="card__article-info">
-          <h5 className="card__title">{data.title}</h5>
-          <label className="card__like" htmlFor={data.slug}>
-            <input className="card__checkbox" type="checkbox" id={data.slug} />
-            <span className="card__custom-checkbox" />
-            {data.favoritesCount}
-          </label>
+          <div className="card__article-like-container">
+            <h5 className="card__title">{data.title}</h5>
+            <label className="card__like" htmlFor={data.slug}>
+              <input className="card__checkbox" type="checkbox" id={data.slug} />
+              <span className="card__custom-checkbox" />
+              {data.favoritesCount}
+            </label>
+          </div>
           <div className="card__tag-list">
             {data.tagList.map(
               (tag) =>

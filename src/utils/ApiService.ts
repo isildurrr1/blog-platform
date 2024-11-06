@@ -137,7 +137,7 @@ class ApiService {
     return article
   }
 
-  static async deleteArticle(slug: string) {
+  static async deleteArticle(slug: string): Promise<boolean> {
     const token = localStorage.getItem('jwt')
     const response = await fetch(`${this.baseUrl}/articles/${slug}`, {
       method: 'DELETE',
@@ -150,6 +150,25 @@ class ApiService {
       return true
     }
     return false
+  }
+
+  static async editArticle(slug: string | undefined, article: ArticleFormType): Promise<FetchPostArtResType> {
+    const token = localStorage.getItem('jwt')
+    const response = await fetch(`${this.baseUrl}/articles/${slug}`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ article }),
+    })
+    if (!response.ok) {
+      const errorData: RegErrorType = await response.json()
+      throw new Error(JSON.stringify(errorData))
+    }
+
+    const newArticle: FetchPostArtResType = await response.json()
+    return newArticle
   }
 }
 
