@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import './new-article/new-article.sass'
-import { ArticleFormType } from '../../types/type'
+import { ArticleFormType, FetchPostArtResType } from '../../types/type'
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
 import { fetchPostArticle } from '../../store/blogSlice'
 
@@ -36,7 +36,7 @@ const NewArticle: React.FC = () => {
     handleSubmit((values) => {
       dispatch(fetchPostArticle(values)).then((res) => {
         if (res.payload) {
-          navigate('/articles')
+          navigate(`/articles/${(res.payload as FetchPostArtResType).article.slug}`)
         }
       })
     })()

@@ -4,12 +4,17 @@ import { format, parseISO } from 'date-fns'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { useNavigate } from 'react-router-dom'
+import { Button, ConfigProvider, Popconfirm } from 'antd'
 
 import './card/card.sass'
 import { CardProps } from '../../types/type'
+import { useAppSelector } from '../../hooks/hooks'
+import { SugnUpButtonConfig } from '../../utils/AntdConfig'
+import ApiService from '../../utils/ApiService'
 
 const Card: React.FC<CardProps> = ({ data, type }) => {
   const navigate = useNavigate()
+  const username = useAppSelector((store) => store.blog.user?.user.username)
   const handleShowFullArticle = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement
     if (!target.closest('.card__like')) {
@@ -21,6 +26,12 @@ const Card: React.FC<CardProps> = ({ data, type }) => {
     if (e.key === 'Enter' || e.key === ' ') {
       handleShowFullArticle(e as unknown as React.MouseEvent<HTMLDivElement>)
     }
+  }
+
+  const deleteCard = () => {
+    ApiService.deleteArticle(data.slug).then((res) => {
+      if (res) navigate('/articles')
+    })
   }
 
   return (
@@ -58,7 +69,33 @@ const Card: React.FC<CardProps> = ({ data, type }) => {
         </div>
         <img src={data.author.image} alt="avatar" className="card__avatar" />
       </div>
-      <p className={`card__description ${type === 'card' && 'card__description_short'}`}>{data.description}</p>
+      <div className="card__description-container">
+        <p className={`card__description ${type === 'card' && 'card__description_short'}`}>{data.description}</p>
+        {type !== 'card' && data.author.username === username ? (
+          <>
+            <Popconfirm
+              placement="rightTop"
+              title="Are you sure to delete this article?"
+              okText="Yes"
+              cancelText="No"
+              onConfirm={deleteCard}
+            >
+              <Button className="card__button" danger>
+                Delete
+              </Button>
+            </Popconfirm>
+            <ConfigProvider theme={SugnUpButtonConfig}>
+              <Button
+                variant="outlined"
+                className="card__button"
+                onClick={() => navigate(`/articles/${data.slug}/edit`)}
+              >
+                Edit
+              </Button>
+            </ConfigProvider>
+          </>
+        ) : null}
+      </div>
       {type !== 'card' && (
         <div style={{ color: '#000000BF' }}>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{data.body}</ReactMarkdown>

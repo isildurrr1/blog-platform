@@ -130,6 +130,27 @@ class ApiService {
     const newArticle: FetchPostArtResType = await response.json()
     return newArticle
   }
+
+  static async getArticle(slug: string | undefined): Promise<FetchPostArtResType> {
+    const response = await fetch(`${this.baseUrl}/articles/${slug}`)
+    const article: FetchPostArtResType = await response.json()
+    return article
+  }
+
+  static async deleteArticle(slug: string) {
+    const token = localStorage.getItem('jwt')
+    const response = await fetch(`${this.baseUrl}/articles/${slug}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    if (response.ok) {
+      return true
+    }
+    return false
+  }
 }
 
 export default ApiService
