@@ -14,7 +14,15 @@ const CardsList: React.FC = () => {
   const articles = useAppSelector((state) => state.blog.list)
   const articlesCount = useAppSelector((state) => state.blog.articlesCount)
   const dispatch = useAppDispatch()
+
   useEffect(() => {
+    if (localStorage.getItem('page') !== null) {
+      setCurrentPage(Number(localStorage.getItem('page')))
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('page', String(currentPage))
     dispatch(fetchArticles(currentPage))
   }, [currentPage])
   const handlePageChange = (page: number) => {

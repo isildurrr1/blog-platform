@@ -98,7 +98,13 @@ const NewArticle: React.FC<EditArticleProps> = ({ edit = false }) => {
               type="text"
               id="title"
               className={`new-article__input ${errors.title ? 'new-article__input_error' : ''}`}
-              {...register('title', { required: 'Title is required' })}
+              {...register('title', {
+                required: 'Title is required',
+                pattern: {
+                  value: /^(?!\s*$).+/,
+                  message: 'Title cannot be empty or just spaces',
+                },
+              })}
             />
             {errors.title && <span className="auth__error-message">{errors.title.message}</span>}
           </label>
@@ -110,7 +116,13 @@ const NewArticle: React.FC<EditArticleProps> = ({ edit = false }) => {
               id="description"
               className="new-article__input"
               placeholder="Title"
-              {...register('description', { required: 'Short description is required' })}
+              {...register('description', {
+                required: 'Short description is required',
+                pattern: {
+                  value: /^(?!\s*$).+/,
+                  message: 'Short description cannot be empty or just spaces',
+                },
+              })}
             />
             {errors.description && <span className="auth__error-message">{errors.description.message}</span>}
           </label>
@@ -121,7 +133,13 @@ const NewArticle: React.FC<EditArticleProps> = ({ edit = false }) => {
               id="text"
               className="new-article__textarea"
               placeholder="Text"
-              {...register('body', { required: 'Text description is required' })}
+              {...register('body', {
+                required: 'Text description is required',
+                pattern: {
+                  value: /^(?!\s*$).+/,
+                  message: 'Text description cannot be empty or just spaces',
+                },
+              })}
             />
             {errors.body && <span className="auth__error-message">{errors.body.message}</span>}
           </label>
